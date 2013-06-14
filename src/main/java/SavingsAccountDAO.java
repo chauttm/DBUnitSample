@@ -1,8 +1,5 @@
-import org.dbunit.database.IDatabaseConnection;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -20,11 +17,11 @@ public class SavingsAccountDAO {
         this.dbConnection = dataSource.getConnection();
     }
 
-    public SavingsAccount findByAccountNumber(String accountNumber) throws SQLException {
+    public SavingsAccountDTO findByAccountNumber(String accountNumber) throws SQLException {
         String queryString = "SELECT * FROM SAVINGS_ACCOUNT WHERE ACCOUNT_NUMBER='" + accountNumber + "'";
         ResultSet resultSet = dbConnection.createStatement().executeQuery(queryString);
         if(resultSet.next())
-            return new SavingsAccount(accountNumber, resultSet.getString("description"),resultSet.getDouble("balance"));
+            return new SavingsAccountDTO(accountNumber, resultSet.getString("description"),resultSet.getDouble("balance"));
         else
             return null;
     }
