@@ -1,8 +1,6 @@
 import org.dbunit.IDatabaseTester;
 import org.dbunit.JdbcDatabaseTester;
-import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.h2.jdbcx.JdbcDataSource;
@@ -13,11 +11,8 @@ import org.junit.Test;
 
 import javax.sql.DataSource;
 import java.nio.charset.Charset;
-import java.sql.Connection;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 public class TestSavingsAccountDAO {
 
@@ -27,9 +22,6 @@ public class TestSavingsAccountDAO {
     private static final String JDBC_URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
     private static final String USER = "sa";
     private static final String PASSWORD = "";
-
-    private Connection dbConnection;
-    private SavingsAccountDAO savingsAccountDAO;
 
     // create the db table
     @BeforeClass
@@ -46,7 +38,7 @@ public class TestSavingsAccountDAO {
     }
 
     private IDataSet readDataSet() throws Exception {
-        return new FlatXmlDataSetBuilder().build(System.class.getResource("/user.xml"));
+        return new FlatXmlDataSetBuilder().build(System.class.getResource("/dataset.xml"));
     }
 
     private void cleanlyInsert(IDataSet dataSet) throws Exception {
@@ -62,11 +54,6 @@ public class TestSavingsAccountDAO {
         SavingsAccountDTO account = savingsAccountDAO.findByAccountNumber("0123456789");
 
         assertEquals("0123456789", account.getAccountNumber());
-    }
-
-    private void insertDataSetIntoDb(ReplacementDataSet replacementDataSet)  throws Exception{
-        DatabaseOperation.CLEAN_INSERT.execute(
-                new DatabaseConnection(dbConnection), replacementDataSet);
     }
 
     private DataSource dataSource() {
